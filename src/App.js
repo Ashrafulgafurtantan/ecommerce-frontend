@@ -4,6 +4,8 @@ import Login from './components/Login';
 import Signup from './components/Signup';
 import Home from './components/Home';
 import AdminDashboard from './components/AdminDashboard';
+import Cart from './components/Cart';
+import Checkout from './components/Checkout';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const PrivateRoute = ({ children }) => {
@@ -41,6 +43,22 @@ function App() {
           element={
             <PrivateRoute>
               <AdminDashboard />
+            </PrivateRoute>
+          }
+        />
+        <Route 
+          path="/cart" 
+          element={
+            <PrivateRoute>
+              <Cart />
+            </PrivateRoute>
+          }
+        />
+        <Route 
+          path="/checkout" 
+          element={
+            <PrivateRoute>
+              <Checkout />
             </PrivateRoute>
           }
         />
