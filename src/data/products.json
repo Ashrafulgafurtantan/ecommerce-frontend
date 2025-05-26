@@ -40,7 +40,7 @@
       "name": "Headphones",
       "category": 2,
       "price": 1500,
-      "unit": "10 count",
+      "unit": "Piece",
       "quantity": 50,
       "description": "Wireless Headphones"
     },
@@ -49,7 +49,7 @@
       "name": "Pizza",
       "category": 3,
       "price": 300,
-      "unit": "10 count",
+      "unit": "Piece",
       "quantity": 100,
       "description": "Margherita Pizza"
     },
@@ -58,7 +58,7 @@
       "name": "Paracetamol",
       "category": 4,
       "price": 20,
-      "unit": "10 count",
+      "unit": "Box",
       "quantity": 200,
       "description": "500mg Tablets"
     },
@@ -67,7 +67,7 @@
       "name": "T-Shirt",
       "category": 5,
       "price": 500,
-      "unit": "10 count",
+      "unit": "Piece",
       "quantity": 150,
       "description": "Cotton T-Shirt"
     },
@@ -76,7 +76,7 @@
       "name": "Face Cream",
       "category": 6,
       "price": 300,
-      "unit": "10 count",
+      "unit": "Piece",
       "quantity": 80,
       "description": "Anti-aging Cream"
     }

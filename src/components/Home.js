@@ -1,31 +1,31 @@
-import React from 'react';
-import { Container, Row, Col, Card, CardBody, CardTitle, Button } from 'reactstrap';
+import React, { useState, useEffect } from 'react';
+import { Container, Row, Col, Card, CardBody, Button, Input, Navbar, NavbarBrand, NavbarToggler, Collapse, Nav, NavItem, NavLink } from 'reactstrap';
 import { useNavigate } from 'react-router-dom';
-
-const products = [
-  {
-    id: 1,
-    name: 'Product 1',
-    price: '$99.99',
-    description: 'Description for product 1'
-  },
-  {
-    id: 2,
-    name: 'Product 2',
-    price: '$149.99',
-    description: 'Description for product 2'
-  },
-  {
-    id: 3,
-    name: 'Product 3',
-    price: '$199.99',
-    description: 'Description for product 3'
-  }
-];
+import { getProducts, getCategories, getCategoryById } from '../utils/dataUtils';
 
 const Home = () => {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
   const navigate = useNavigate();
   const userType = localStorage.getItem('userType');
+
+  useEffect(() => {
+    loadProductsAndCategories();
+  }, []);
+
+  const loadProductsAndCategories = () => {
+    setProducts(getProducts());
+    setCategories(getCategories());
+  };
+
+  const handleSearch = (e) => {
+    setSearchTerm(e.target.value);
+  };
+
+  const filteredProducts = products.filter(product => 
+    product.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   const handleLogout = () => {
     localStorage.removeItem('isLoggedIn');
@@ -35,26 +35,54 @@ const Home = () => {
 
   return (
     <div>
-      <nav className="navbar navbar-light bg-light mb-4">
-        <div className="container">
-          <span className="navbar-brand mb-0 h1">E-Commerce</span>
-          <div className="d-flex">
-            <span className="me-3">Welcome, {userType === 'admin' ? 'Admin' : 'Customer'}</span>
-            <Button color="secondary" onClick={handleLogout}>Logout</Button>
-          </div>
-        </div>
-      </nav>
+      <Navbar color="light" light expand="md" className="mb-4">
+        <Container>
+          <NavbarBrand>E-Commerce</NavbarBrand>
+          <NavbarToggler onClick={() => {}} />
+          <Collapse navbar>
+            <Nav className="me-auto" navbar>
+              <NavItem>
+                <Input 
+                  type="search" 
+                  placeholder="Search products..." 
+                  value={searchTerm}
+                  onChange={handleSearch}
+                  className="me-2"
+                />
+              </NavItem>
+            </Nav>
+            <Nav navbar>
+              <NavItem>
+                <span className="me-3">Welcome, {userType === 'admin' ? 'Admin' : 'Customer'}</span>
+              </NavItem>
+              {userType === 'admin' && (
+                <NavItem>
+                  <NavLink href="/admin">Admin Dashboard</NavLink>
+                </NavItem>
+              )}
+              <NavItem>
+                <Button color="secondary" onClick={handleLogout}>Logout</Button>
+              </NavItem>
+            </Nav>
+          </Collapse>
+        </Container>
+      </Navbar>
 
       <Container>
         <h2 className="mb-4">Our Products</h2>
         <Row>
-          {products.map((product) => (
+          {filteredProducts.map((product) => (
             <Col md={4} key={product.id} className="mb-4">
               <Card>
                 <CardBody>
-                  <CardTitle tag="h5">{product.name}</CardTitle>
-                  <p className="card-text">{product.description}</p>
-                  <h5 className="card-title">{product.price}</h5>
+                  <h5 className="card-title">{product.name}</h5>
+                  <p className="card-text">
+                    <strong>Category:</strong> {getCategoryById(product.category).name}<br />
+                    <strong>Price:</strong> ${product.price}<br />
+                    <strong>Unit:</strong> {product.unit}<br />
+                    <strong>Available:</strong> {product.quantity} {product.unit}<br />
+                    <strong>Description:</strong> {product.description}
+                  </p>
                   <Button color="primary" block>Add to Cart</Button>
                 </CardBody>
               </Card>
