@@ -1,0 +1,84 @@
+{
+  "categories": [
+    {
+      "id": 1,
+      "name": "Groceries"
+    },
+    {
+      "id": 2,
+      "name": "Accessories"
+    },
+    {
+      "id": 3,
+      "name": "Food"
+    },
+    {
+      "id": 4,
+      "name": "Medicine"
+    },
+    {
+      "id": 5,
+      "name": "Wear in"
+    },
+    {
+      "id": 6,
+      "name": "Cosmetics"
+    }
+  ],
+  "products": [
+    {
+      "id": 1,
+      "name": "Rice",
+      "category": 1,
+      "price": 50,
+      "unit": "Kg",
+      "quantity": 100,
+      "description": "Basmati Rice"
+    },
+    {
+      "id": 2,
+      "name": "Headphones",
+      "category": 2,
+      "price": 1500,
+      "unit": "10 count",
+      "quantity": 50,
+      "description": "Wireless Headphones"
+    },
+    {
+      "id": 3,
+      "name": "Pizza",
+      "category": 3,
+      "price": 300,
+      "unit": "10 count",
+      "quantity": 100,
+      "description": "Margherita Pizza"
+    },
+    {
+      "id": 4,
+      "name": "Paracetamol",
+      "category": 4,
+      "price": 20,
+      "unit": "10 count",
+      "quantity": 200,
+      "description": "500mg Tablets"
+    },
+    {
+      "id": 5,
+      "name": "T-Shirt",
+      "category": 5,
+      "price": 500,
+      "unit": "10 count",
+      "quantity": 150,
+      "description": "Cotton T-Shirt"
+    },
+    {
+      "id": 6,
+      "name": "Face Cream",
+      "category": 6,
+      "price": 300,
+      "unit": "10 count",
+      "quantity": 80,
+      "description": "Anti-aging Cream"
+    }
+  ]
+}

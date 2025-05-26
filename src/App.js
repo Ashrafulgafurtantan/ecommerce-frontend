@@ -3,11 +3,23 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import Login from './components/Login';
 import Signup from './components/Signup';
 import Home from './components/Home';
+import AdminDashboard from './components/AdminDashboard';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const PrivateRoute = ({ children }) => {
   const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
-  return isLoggedIn ? children : <Navigate to="/login" />;
+  const userType = localStorage.getItem('userType');
+  const isCustomer = userType === 'customer';
+  
+  if (!isLoggedIn) {
+    return <Navigate to="/login" />;
+  }
+  
+  if (isCustomer && window.location.pathname === '/admin') {
+    return <Navigate to="/home" />;
+  }
+  
+  return children;
 };
 
 function App() {
@@ -21,6 +33,14 @@ function App() {
           element={
             <PrivateRoute>
               <Home />
+            </PrivateRoute>
+          }
+        />
+        <Route 
+          path="/admin" 
+          element={
+            <PrivateRoute>
+              <AdminDashboard />
             </PrivateRoute>
           }
         />
