@@ -23,9 +23,94 @@ const Cart = () => {
   if (cartItems.length === 0) {
     return (
       <Container className="mt-5">
-        <Alert color="info">
-          Your cart is empty. <a href="/home">Continue shopping</a>
-        </Alert>
+        <Card 
+          className="border-0 shadow text-center py-5"
+          style={{
+            borderRadius: '15px',
+            background: 'linear-gradient(145deg, #f8f9fa 0%, #e9ecef 100%)'
+          }}
+        >
+          <CardBody className="py-5">
+            <div 
+              className="empty-cart-icon mb-4"
+              style={{
+                width: '120px',
+                height: '120px',
+                margin: '0 auto',
+                background: 'linear-gradient(135deg, #4361ee 0%, #3f37c9 100%)',
+                borderRadius: '50%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                boxShadow: '0 10px 20px rgba(67, 97, 238, 0.3)',
+                animation: 'pulse 2s infinite'
+              }}
+            >
+              <i className="fas fa-shopping-cart fa-3x" style={{ color: 'white' }}></i>
+            </div>
+            <h2 
+              className="mb-3"
+              style={{
+                fontWeight: '700',
+                color: '#212529',
+                letterSpacing: '0.5px'
+              }}
+            >
+              Your Cart is Empty
+            </h2>
+            <p 
+              className="text-muted mb-4"
+              style={{
+                fontSize: '1.1rem',
+                maxWidth: '500px',
+                margin: '0 auto'
+              }}
+            >
+              Looks like you haven't added anything to your cart yet. 
+              Explore our products and find something you'll love!
+            </p>
+            <Button 
+              color="primary" 
+              size="lg" 
+              onClick={() => navigate('/home')}
+              className="px-5 py-3 fw-bold"
+              style={{
+                borderRadius: '50px',
+                boxShadow: '0 5px 15px rgba(67, 97, 238, 0.3)',
+                transition: 'all 0.3s',
+                background: 'linear-gradient(to right, #4361ee, #3f37c9)',
+                border: 'none',
+                letterSpacing: '0.5px',
+                transform: 'translateY(0)',
+              }}
+              onMouseOver={(e) => {
+                e.currentTarget.style.transform = 'translateY(-3px)';
+                e.currentTarget.style.boxShadow = '0 8px 20px rgba(67, 97, 238, 0.4)';
+              }}
+              onMouseOut={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = '0 5px 15px rgba(67, 97, 238, 0.3)';
+              }}
+            >
+              <i className="fas fa-store me-2"></i> Continue Shopping
+            </Button>
+            <style>
+              {`
+                @keyframes pulse {
+                  0% {
+                    transform: scale(1);
+                  }
+                  50% {
+                    transform: scale(1.05);
+                  }
+                  100% {
+                    transform: scale(1);
+                  }
+                }
+              `}
+            </style>
+          </CardBody>
+        </Card>
       </Container>
     );
   }
