@@ -1,6 +1,222 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Row, Col, Card, CardBody, Button, Modal, ModalHeader, ModalBody, Form, FormGroup, Label, Input, Alert } from 'reactstrap';
+import { Container, Row, Col, Card, CardBody, Button, Modal, ModalHeader, ModalBody, Form, FormGroup, Label, Input, Alert, Collapse, Badge } from 'reactstrap';
 import { productAPI, categoryAPI } from '../utils/productApi';
+import { useNavigate } from 'react-router-dom';
+
+const ProductCard = ({ product, onEdit, onDelete }) => {
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
+
+  return (
+    <Card 
+      className={`h-100 ${isHovered ? 'shadow-lg' : 'shadow'}`}
+      style={{
+        transition: 'all 0.3s ease',
+        transform: isHovered ? 'translateY(-5px)' : 'none',
+        borderRadius: '12px',
+        border: 'none'
+      }}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      <CardBody className="p-0">
+        {product.image && (
+          <div className="position-relative">
+            <img 
+              src={product.image} 
+              alt={product.name} 
+              className="img-fluid" 
+              style={{ 
+                height: '180px', 
+                width: '100%', 
+                objectFit: 'cover',
+                borderTopLeftRadius: '12px',
+                borderTopRightRadius: '12px'
+              }}
+            />
+            <Badge 
+              color="primary" 
+              pill
+              className="position-absolute"
+              style={{ 
+                top: '10px', 
+                right: '10px',
+                fontSize: '0.8rem',
+                padding: '0.5em 0.8em',
+                boxShadow: '0 2px 5px rgba(0,0,0,0.2)'
+              }}
+            >
+              {product.category.name}
+            </Badge>
+          </div>
+        )}
+        <div className="p-3">
+          <h5 
+            className="card-title mb-2 fw-bold"
+            style={{ 
+              fontSize: '1.2rem', 
+              letterSpacing: '0.02em'
+            }}
+          >
+            {product.name}
+          </h5>
+          
+          <div className="d-flex align-items-center mb-3">
+            <div 
+              className="me-2 fw-bold"
+              style={{ 
+                fontSize: '1.3rem', 
+                color: '#4361ee',
+                letterSpacing: '0.03em'
+              }}
+            >
+              ${product.discountedPrice || product.price}
+            </div>
+            {product.discountedPrice && (
+              <div 
+                className="text-muted text-decoration-line-through"
+                style={{ 
+                  fontSize: '0.9rem' 
+                }}
+              >
+                ${product.price}
+              </div>
+            )}
+          </div>
+          
+          <div className="mb-3">
+            <span 
+              className={`badge ${product.quantity > 0 ? 'bg-success' : 'bg-danger'}`}
+              style={{ 
+                padding: '0.4em 0.7em',
+                fontSize: '0.8rem',
+                boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+              }}
+            >
+              {product.quantity > 0 ? 'In Stock' : 'Out of Stock'}
+            </span>
+            <span 
+              className="ms-2"
+              style={{ 
+                fontSize: '0.9rem',
+                color: '#666'
+              }}
+            >
+              {product.quantity} {product.unit} available
+            </span>
+          </div>
+          
+          <div className="d-flex justify-content-between mb-3">
+            <Button 
+              color="primary" 
+              size="sm" 
+              onClick={() => onEdit(product)}
+              className="fw-bold"
+              style={{ 
+                borderRadius: '6px',
+                padding: '0.4rem 0.8rem',
+                boxShadow: '0 2px 4px rgba(67, 97, 238, 0.3)',
+                transition: 'all 0.2s ease'
+              }}
+            >
+              <i className="fas fa-edit me-1"></i> Edit
+            </Button>
+            <Button 
+              color="danger" 
+              size="sm" 
+              onClick={() => onDelete(product._id)}
+              className="fw-bold"
+              style={{ 
+                borderRadius: '6px',
+                padding: '0.4rem 0.8rem',
+                boxShadow: '0 2px 4px rgba(220, 53, 69, 0.3)',
+                transition: 'all 0.2s ease'
+              }}
+            >
+              <i className="fas fa-trash-alt me-1"></i> Delete
+            </Button>
+          </div>
+          
+          <Button 
+            color="link" 
+            className="w-100 text-decoration-none p-0 fw-bold"
+            style={{
+              color: '#4361ee',
+              letterSpacing: '0.02em',
+              fontSize: '0.95rem'
+            }}
+            onClick={() => setIsDetailsOpen(!isDetailsOpen)}
+          >
+            {isDetailsOpen ? 'Hide Details' : 'Show Details'}
+            <i className={`fas fa-chevron-${isDetailsOpen ? 'up' : 'down'} ms-2`}></i>
+          </Button>
+          
+          <Collapse isOpen={isDetailsOpen}>
+            <div 
+              className="mt-3 pt-3 border-top"
+              style={{
+                backgroundColor: '#f8f9fa',
+                borderRadius: '8px',
+                padding: '12px',
+                marginTop: '15px'
+              }}
+            >
+              {product.rating && (
+                <div className="mb-2 d-flex align-items-center">
+                  <div 
+                    className="me-2"
+                    style={{
+                      backgroundColor: '#fff3cd',
+                      color: '#856404',
+                      borderRadius: '50%',
+                      width: '28px',
+                      height: '28px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}
+                  >
+                    <i className="fas fa-star"></i>
+                  </div>
+                  <div>
+                    <strong>Rating:</strong> 
+                    <span className="ms-1 fw-bold">{product.rating}</span>
+                  </div>
+                </div>
+              )}
+              
+              <div className="mb-2">
+                <strong>Description:</strong>
+                <p 
+                  className="mb-2 mt-1"
+                  style={{
+                    fontSize: '0.9rem',
+                    lineHeight: '1.4',
+                    color: '#555'
+                  }}
+                >
+                  {product.description}
+                </p>
+              </div>
+              
+              <div 
+                className="text-muted small"
+                style={{
+                  backgroundColor: '#e9ecef',
+                  padding: '6px 10px',
+                  borderRadius: '4px',
+                  fontSize: '0.8rem'
+                }}
+              >
+                <strong>Product ID:</strong> {product._id}
+              </div>
+            </div>
+          </Collapse>
+        </div>
+      </CardBody>
+    </Card>
+  );
+};
 
 const AdminDashboard = () => {
   const [products, setProducts] = useState([]);
@@ -9,6 +225,7 @@ const AdminDashboard = () => {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: '',
     categoryId: '',
@@ -122,10 +339,25 @@ const AdminDashboard = () => {
     <div>
       <nav className="navbar navbar-light bg-light mb-4">
         <div className="container">
-          <span className="navbar-brand mb-0 h1">Admin Dashboard</span>
+          <div className="d-flex align-items-center">
+            <Button 
+              color="primary"
+              className="me-3"
+              onClick={() => navigate('/home')}
+              style={{
+                borderRadius: '8px',
+                boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                fontWeight: 'bold'
+              }}
+            >
+              <i className="fas fa-home me-1"></i> Back to Home
+            </Button>
+            <span className="navbar-brand mb-0 h1">Admin Dashboard</span>
+          </div>
           <Button color="primary" onClick={() => toggleModal()}>
-            Add New Product
+            <i className="fas fa-plus me-1"></i> Add New Product
           </Button>
+          
         </div>
       </nav>
 
@@ -134,32 +366,11 @@ const AdminDashboard = () => {
         <Row>
           {products.map((product) => (
             <Col md={4} key={product._id} className="mb-4">
-              <Card>
-                <CardBody>
-                  {product.image && (
-                    <img 
-                      src={product.image} 
-                      alt={product.name} 
-                      className="img-fluid mb-3" 
-                      style={{ maxHeight: '200px', objectFit: 'cover' }}
-                    />
-                  )}
-                  <h5 className="card-title">{product.name}</h5>
-                  <p className="card-text">
-                    <strong>Category:</strong> {product.category.name}<br />
-                    <strong>Price:</strong> ${product.price}<br />
-                    <strong>Discounted Price:</strong> ${product.discountedPrice}<br />
-                    <strong>Unit:</strong> {product.unit}<br />
-                    <strong>Quantity:</strong> {product.quantity}<br />
-                    <strong>Rating:</strong> {product.rating}<br />
-                    <strong>Description:</strong> {product.description}
-                  </p>
-                  <div className="d-flex justify-content-between">
-                    <Button color="primary" onClick={() => toggleModal(product)}>Edit</Button>
-                    <Button color="danger" onClick={() => handleDelete(product._id)}>Delete</Button>
-                  </div>
-                </CardBody>
-              </Card>
+              <ProductCard 
+                product={product} 
+                onEdit={toggleModal}
+                onDelete={handleDelete}
+              />
             </Col>
           ))}
         </Row>
@@ -231,7 +442,7 @@ const AdminDashboard = () => {
               >
                 <option value="Kg">Kg</option>
                 <option value="Liter">Liter</option>
-                <option value="10 count">10 count</option>
+                <option value="Piece">Piece</option>
               </Input>
             </FormGroup>
             <FormGroup>

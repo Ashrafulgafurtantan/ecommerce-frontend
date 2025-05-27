@@ -1,12 +1,14 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import { CartProvider } from './context/CartContext';
 import Login from './components/Login';
 import Register from './components/Register';
 import Home from './components/Home';
 import AdminDashboard from './components/AdminDashboard';
 import Cart from './components/Cart';
 import Checkout from './components/Checkout';
+import OrderHistory from './components/OrderHistory';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const PrivateRoute = ({ children, requireAdmin = false }) => {
@@ -48,19 +50,20 @@ function AppRoutes() {
           </PrivateRoute>
         }
       />
-      <Route 
-        path="/cart" 
-        element={
-          <PrivateRoute>
-            <Cart />
-          </PrivateRoute>
-        }
-      />
+      <Route path="/cart" element={<Cart />} />
       <Route 
         path="/checkout" 
         element={
           <PrivateRoute>
             <Checkout />
+          </PrivateRoute>
+        }
+      />
+      <Route 
+        path="/order-history" 
+        element={
+          <PrivateRoute>
+            <OrderHistory />
           </PrivateRoute>
         }
       />
@@ -72,9 +75,11 @@ function AppRoutes() {
 function App() {
   return (
     <AuthProvider>
-      <Router>
-        <AppRoutes />
-      </Router>
+      <CartProvider>
+        <Router>
+          <AppRoutes />
+        </Router>
+      </CartProvider>
     </AuthProvider>
   );
 }

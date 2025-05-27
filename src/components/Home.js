@@ -2,11 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Card, CardBody, Button, Input, Navbar, NavbarBrand, NavbarToggler, Collapse, Nav, NavItem, NavLink, Alert, Spinner } from 'reactstrap';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useCart } from '../context/CartContext';
 import { productAPI } from '../utils/productApi';
 import '../styles/global.css';
 
 const ProductCard = ({ product, onAddToCart }) => {
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+
+  const handleAddToCart = () => {
+    onAddToCart(product);
+  };
 
   return (
     <Card className="h-100">
@@ -36,7 +41,7 @@ const ProductCard = ({ product, onAddToCart }) => {
         <Button 
           color="primary" 
           block 
-          onClick={() => onAddToCart(product._id)}
+          onClick={handleAddToCart}
           className="px-4 mb-3"
           disabled={product.quantity === 0}
         >
@@ -77,8 +82,10 @@ const Home = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [addToCartMessage, setAddToCartMessage] = useState('');
   const navigate = useNavigate();
   const { user, logout } = useAuth();
+  const { addToCart } = useCart();
 
   useEffect(() => {
     loadProducts();
@@ -106,12 +113,13 @@ const Home = () => {
 
   const handleLogout = () => {
     logout();
-    navigate('/login');
+    navigate('/login', { replace: true });
   };
 
-  const handleAddToCart = (productId) => {
-    // TODO: Implement cart functionality with backend
-    alert('Added to cart!');
+  const handleAddToCart = (product) => {
+    addToCart(product);
+    setAddToCartMessage(`${product.name} added to cart!`);
+    setTimeout(() => setAddToCartMessage(''), 2000); // Clear message after 2 seconds
   };
 
   if (loading && !products.length) {
@@ -162,6 +170,11 @@ const Home = () => {
                 </NavLink>
               </NavItem>
               <NavItem>
+                <NavLink href="/order-history" className="nav-link">
+                  <i className="fas fa-history me-1"></i> Order History
+                </NavLink>
+              </NavItem>
+              <NavItem>
                 <NavLink href="/" onClick={handleLogout} className="nav-link">
                   <i className="fas fa-sign-out-alt me-1"></i> Logout
                 </NavLink>
@@ -173,6 +186,11 @@ const Home = () => {
 
       <Container>
         {error && <Alert color="danger" className="mb-4">{error}</Alert>}
+        {addToCartMessage && (
+          <Alert color="success" className="mb-4">
+            {addToCartMessage}
+          </Alert>
+        )}
         <h2 className="mb-4">Featured Products</h2>
         <Row>
           {filteredProducts.map((product) => (

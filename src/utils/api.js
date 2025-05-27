@@ -35,6 +35,34 @@ export const authAPI = {
   },
 };
 
+// Order API calls
+export const orderAPI = {
+  createOrder: async (orderData) => {
+    const response = await fetch(`${API_BASE_URL}/orders`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify(orderData),
+    });
+    return handleResponse(response);
+  },
+
+  getOrderHistory: async () => {
+    const response = await fetch(`${API_BASE_URL}/orders/history`, {
+      method: 'GET',
+      headers: getAuthHeaders(),
+    });
+    return handleResponse(response);
+  },
+
+  getOrderById: async (orderId) => {
+    const response = await fetch(`${API_BASE_URL}/orders/${orderId}`, {
+      method: 'GET',
+      headers: getAuthHeaders(),
+    });
+    return handleResponse(response);
+  }
+};
+
 // Helper function to create headers with authentication token
 export const getAuthHeaders = () => {
   const token = localStorage.getItem('token');

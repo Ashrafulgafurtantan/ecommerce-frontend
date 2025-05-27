@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Container, Card, CardBody, CardTitle, Form, FormGroup, Label, Input, Button, Alert } from 'reactstrap';
 import { useAuth } from '../context/AuthContext';
@@ -6,13 +6,20 @@ import { authAPI } from '../utils/api';
 
 const Login = () => {
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { login, user } = useAuth();
   const [formData, setFormData] = useState({
     email: '',
     password: '',
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    // If user is already logged in, redirect to home
+    if (user) {
+      navigate('/home');
+    }
+  }, [user, navigate]);
 
   const handleChange = (e) => {
     setFormData({
@@ -55,6 +62,11 @@ const Login = () => {
       setLoading(false);
     }
   };
+
+  // If user is already logged in, don't render the login form
+  if (user) {
+    return null;
+  }
 
   return (
     <Container className="mt-5">
