@@ -53,7 +53,7 @@ const ProductCard = ({ product, onAddToCart }) => {
                 boxShadow: '0 2px 5px rgba(0,0,0,0.2)'
               }}
             >
-              {product.category.name}
+              {product.Category?.name || 'Uncategorized'}
             </Badge>
           </div>
         )}
@@ -229,6 +229,8 @@ const Home = () => {
       setLoading(true);
       const productsData = await productAPI.getAllProducts();
       setProducts(productsData);
+      console.log(productsData);
+      console.log(productsData[0].Category.name);
     } catch (err) {
       setError(err.message || 'Failed to load products');
     } finally {
@@ -327,7 +329,7 @@ const Home = () => {
         <h2 className="mb-4">Featured Products</h2>
         <Row>
           {filteredProducts.map((product) => (
-            <Col md={4} key={product._id} className="mb-4">
+            <Col md={4} key={product.id} className="mb-4">
               <ProductCard 
                 product={product} 
                 onAddToCart={handleAddToCart}

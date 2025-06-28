@@ -46,7 +46,7 @@ const ProductCard = ({ product, onEdit, onDelete }) => {
                 boxShadow: '0 2px 5px rgba(0,0,0,0.2)'
               }}
             >
-              {product.category.name}
+              {product.Category?.name || 'Uncategorized'}
             </Badge>
           </div>
         )}
@@ -124,7 +124,7 @@ const ProductCard = ({ product, onEdit, onDelete }) => {
             <Button 
               color="danger" 
               size="sm" 
-              onClick={() => onDelete(product._id)}
+              onClick={() => onDelete(product.id)}
               className="fw-bold"
               style={{ 
                 borderRadius: '6px',
@@ -208,7 +208,7 @@ const ProductCard = ({ product, onEdit, onDelete }) => {
                   fontSize: '0.8rem'
                 }}
               >
-                <strong>Product ID:</strong> {product._id}
+                <strong>Product ID:</strong> {product.id}
               </div>
             </div>
           </Collapse>
@@ -250,6 +250,7 @@ const AdminDashboard = () => {
         categoryAPI.getAllCategories()
       ]);
       setProducts(productsData);
+      console.log(productsData);
       setCategories(categoriesData);
     } catch (err) {
       setError(err.message || 'Failed to load data');
@@ -263,7 +264,7 @@ const AdminDashboard = () => {
       setSelectedProduct(product);
       setFormData({
         name: product.name,
-        categoryId: product.category._id,
+        categoryId: product.category.id,
         price: product.price,
         unit: product.unit,
         quantity: product.quantity,
@@ -304,7 +305,7 @@ const AdminDashboard = () => {
 
     try {
       if (selectedProduct) {
-        await productAPI.updateProduct(selectedProduct._id, formData);
+        await productAPI.updateProduct(selectedProduct.id, formData);
       } else {
         await productAPI.createProduct(formData);
       }
@@ -365,7 +366,7 @@ const AdminDashboard = () => {
         {error && <Alert color="danger" className="mb-4">{error}</Alert>}
         <Row>
           {products.map((product) => (
-            <Col md={4} key={product._id} className="mb-4">
+            <Col md={4} key={product.id} className="mb-4">
               <ProductCard 
                 product={product} 
                 onEdit={toggleModal}
@@ -405,7 +406,7 @@ const AdminDashboard = () => {
               >
                 <option value="">Select Category</option>
                 {categories.map(category => (
-                  <option key={category._id} value={category._id}>{category.name}</option>
+                  <option key={category.id} value={category.id}>{category.name}</option>
                 ))}
               </Input>
             </FormGroup>

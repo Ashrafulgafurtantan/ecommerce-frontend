@@ -27,7 +27,7 @@ const Checkout = () => {
         // Format order data according to API requirements
         const orderData = {
           items: cartItems.map(item => ({
-            productId: item._id,
+            productId: item.id,
             quantity: item.quantity
           }))
         };
@@ -80,7 +80,7 @@ const Checkout = () => {
               <h4 className="mb-3">Order Summary</h4>
               <div className="list-group">
                 {cartItems.map((item) => (
-                  <div key={item._id} className="list-group-item">
+                  <div key={item.id} className="list-group-item">
                     <div className="d-flex justify-content-between align-items-center">
                       <div>
                         <h5 className="mb-0">{item.name}</h5>

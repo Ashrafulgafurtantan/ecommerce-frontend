@@ -121,7 +121,7 @@ const Cart = () => {
       <Row>
         <Col md={8}>
           {cartItems.map((item) => (
-            <Card key={item._id} className="mb-3">
+            <Card key={item.id} className="mb-3">
               <CardBody>
                 <Row>
                   <Col md={3}>
@@ -138,7 +138,7 @@ const Cart = () => {
                     <div className="d-flex justify-content-between align-items-start">
                       <div>
                         <h5 className="mb-2">{item.name}</h5>
-                        <p className="text-muted mb-2">{item.category.name}</p>
+                        <p className="text-muted mb-2">{item.Category?.name || 'Uncategorized'}</p>
                         <div className="d-flex align-items-center mb-2">
                           <div className="product-discounted-price text-primary fw-bold me-2">
                             ${item.discountedPrice || item.price}
@@ -153,7 +153,7 @@ const Cart = () => {
                       <Button
                         color="danger"
                         size="sm"
-                        onClick={() => removeFromCart(item._id)}
+                        onClick={() => removeFromCart(item.id)}
                         className="d-flex align-items-center"
                       >
                         <i className="fas fa-trash-alt me-1"></i>
@@ -165,7 +165,7 @@ const Cart = () => {
                         <Button
                           color="danger"
                           size="sm"
-                          onClick={() => handleQuantityChange(item._id, item.quantity, -1)}
+                          onClick={() => handleQuantityChange(item.id, item.quantity, -1)}
                           className="px-2"
                         >
                           <i className="fas fa-minus" style={{ color: 'white' }}></i>
@@ -176,7 +176,7 @@ const Cart = () => {
                         <Button
                           color="success"
                           size="sm"
-                          onClick={() => handleQuantityChange(item._id, item.quantity, 1)}
+                          onClick={() => handleQuantityChange(item.id, item.quantity, 1)}
                           className="px-2"
                         >
                           <i className="fas fa-plus" style={{ color: 'white' }}></i>

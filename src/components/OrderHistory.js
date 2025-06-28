@@ -35,7 +35,7 @@ const OrderHistory = () => {
   };
 
   const handleViewOrderDetails = async (orderId) => {
-    if (selectedOrder && selectedOrder._id === orderId) {
+    if (selectedOrder && selectedOrder.id === orderId) {
       setSelectedOrder(null);
       return;
     }
@@ -112,24 +112,24 @@ const OrderHistory = () => {
               </thead>
               <tbody>
                 {orders.map((order) => (
-                  <React.Fragment key={order._id}>
+                  <React.Fragment key={order.id}>
                     <tr>
-                      <td>#{order._id.slice(-6)}</td>
+                      <td>#{String(order.id).slice(-6)}</td>
                       <td>{formatDate(order.createdAt)}</td>
-                      <td>{order.items.length} item(s)</td>
-                      <td>${order.totalAmount.toFixed(2)}</td>
+                      <td>{order.OrderItems.length} item(s)</td>
+                      <td>${parseFloat(order.totalAmount).toFixed(2)}</td>
                       <td>{getStatusBadge(order.status)}</td>
                       <td>
                         <Button 
                           color="link" 
                           size="sm" 
-                          onClick={() => handleViewOrderDetails(order._id)}
+                          onClick={() => handleViewOrderDetails(order.id)}
                         >
-                          {selectedOrder && selectedOrder._id === order._id ? 'Hide Details' : 'View Details'}
+                          {selectedOrder && selectedOrder.id === order.id ? 'Hide Details' : 'View Details'}
                         </Button>
                       </td>
                     </tr>
-                    {selectedOrder && selectedOrder._id === order._id && (
+                    {selectedOrder && selectedOrder.id === order.id && (
                       <tr>
                         <td colSpan="6" className="bg-light">
                           <div className="p-3">
@@ -144,36 +144,36 @@ const OrderHistory = () => {
                                 </tr>
                               </thead>
                               <tbody>
-                                {selectedOrder.items.map((item, index) => (
+                                {selectedOrder.OrderItems.map((item, index) => (
                                   <tr key={index}>
                                     <td>
                                       <div className="d-flex align-items-center">
-                                        {item.product.image && (
+                                        {item.Product?.image && (
                                           <img 
-                                            src={item.product.image} 
-                                            alt={item.product.name} 
+                                            src={item.Product.image} 
+                                            alt={item.Product?.name || 'Product'} 
                                             className="me-2" 
                                             style={{ width: '40px', height: '40px', objectFit: 'cover' }} 
                                           />
                                         )}
-                                        <span>{item.product.name}</span>
+                                        <span>{item.Product?.name || 'Product'}</span>
                                       </div>
                                     </td>
                                     <td>
-                                      ${item.pricePaid.toFixed(2)}
+                                      ${parseFloat(item.pricePaid).toFixed(2)}
                                       {item.isDiscounted && (
                                         <span className="ms-2 text-muted text-decoration-line-through">
-                                          ${item.originalPrice.toFixed(2)}
+                                          ${parseFloat(item.originalPrice).toFixed(2)}
                                         </span>
                                       )}
                                     </td>
                                     <td>{item.quantity}</td>
-                                    <td>${(item.pricePaid * item.quantity).toFixed(2)}</td>
+                                    <td>${(parseFloat(item.pricePaid) * item.quantity).toFixed(2)}</td>
                                   </tr>
                                 ))}
                                 <tr>
                                   <td colSpan="3" className="text-end fw-bold">Total:</td>
-                                  <td className="fw-bold">${selectedOrder.totalAmount.toFixed(2)}</td>
+                                  <td className="fw-bold">${parseFloat(selectedOrder.totalAmount).toFixed(2)}</td>
                                 </tr>
                               </tbody>
                             </Table>
